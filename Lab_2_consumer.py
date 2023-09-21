@@ -2,6 +2,12 @@ import click
 from confluent_kafka import Consumer, KafkaError
 from avro.io import DatumReader, BinaryDecoder
 
+def signal_handler(sig, frame):
+    print('EXITING SAFELY!')
+    exit(0)
+
+signal.signal(signal.SIGTERM, signal_handler)
+
 c = Consumer({
     'bootstrap.servers': '13.49.128.80:19093',
     'group.id': 'simple_consumer1',
