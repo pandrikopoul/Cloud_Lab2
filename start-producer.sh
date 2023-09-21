@@ -1,14 +1,17 @@
 #!/bin/bash
 
+set -e
+
+
 USAGE="
-Usage: start-producer.sh <topic>
+Usage: run.sh <topic>
 
     topic: The topic where messages are to be produced.
 "
 
 if ! (( $# > 0 )); then
-    echo "$USAGE"
-    exit 1
+    echo $USAGE
+    exit -1
 fi
 
 topic="$1"
