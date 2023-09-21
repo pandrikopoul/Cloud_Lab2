@@ -13,10 +13,16 @@ fi
 
 topic="$1"
 
+
+docker build docker build -t experiment-producer -f Dockerfile_producer.txt .
+
+
+
+
 for i in {1..3}; do
     docker run \
         --rm \
-        -v $(pwd)/auth:/usr/src/cc-assignment-2023/experiment-producer/auth \
-        image/experiment-producer \
+        -v $(pwd)/data:/usr/src/data \
+        experiment-producer \
         --topic "$topic" &
 done
