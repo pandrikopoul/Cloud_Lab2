@@ -24,7 +24,10 @@ c = Consumer({
 @click.command()
 @click.argument('topic')
 def consume(topic: str):
-    c.subscribe([topic])
+      c.subscribe(
+        [topic], 
+        on_assign=lambda _, p_list: print(p_list)
+    )
 
     while True:
         msg = c.poll(1.0)
