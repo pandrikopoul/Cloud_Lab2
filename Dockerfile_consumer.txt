@@ -1,0 +1,19 @@
+# Dockerfile-ClientPython_lab2
+
+FROM python:3.7
+
+
+
+
+VOLUME ["/usr/src/data"]
+
+WORKDIR /usr/src/app
+
+RUN pip install click
+RUN pip install confluent-kafka
+RUN pip install avro-python3
+
+COPY Lab_2_consumer.py .
+
+
+ENTRYPOINT ["python3", "Lab_2_consumer.py" ]
