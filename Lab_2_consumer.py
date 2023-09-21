@@ -44,9 +44,13 @@ def consume(topic: str):
         reader = DatumReader()
         decoded_message = reader.read(decoder)
 
-
-        record_name = decoded_message['record_name']
-        data = decoded_message['deserialized_message']
+        if decoded_message is not None:
+            record_name = decoded_message['record_name']
+            data = decoded_message['deserialized_message']
+            print(record_name)
+            print(data)
+        else:
+            print("Received NoneType message")
 
         print(record_name)
         print(data)
