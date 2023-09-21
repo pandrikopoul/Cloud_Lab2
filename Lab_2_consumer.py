@@ -1,6 +1,7 @@
 import click
 from confluent_kafka import Consumer, KafkaError
 from avro.io import DatumReader, BinaryDecoder
+import random
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
