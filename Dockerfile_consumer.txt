@@ -16,4 +16,4 @@ RUN pip install avro-python3
 COPY Lab_2_consumer.py .
 
 
-ENTRYPOINT ["python3", "Lab_2_consumer.py" ]
+ENTRYPOINT ["python3", "-u" ]
