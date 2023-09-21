@@ -17,7 +17,7 @@ fi
 topic="$1"
 
 
-docker build docker build -t experiment-producer -f Dockerfile_producer.txt .
+
 
 
 
