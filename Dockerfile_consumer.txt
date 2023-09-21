@@ -16,4 +16,5 @@ RUN pip install avro-python3
 COPY Lab_2_consumer.py .
 
 
+VOLUME ["/usr/src/app/auth"]
 ENTRYPOINT ["python3", "-u" ]
