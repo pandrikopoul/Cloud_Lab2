@@ -5,7 +5,7 @@ FROM python:3.7
 
 
 
-VOLUME ["/usr/src/data"]
+VOLUME ["/usr/src/app/auth"]
 
 WORKDIR /usr/src/app
 
