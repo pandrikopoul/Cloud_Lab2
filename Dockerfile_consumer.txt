@@ -9,8 +9,8 @@ VOLUME ["/usr/src/app/auth"]
 
 WORKDIR /usr/src/app
 
-RUN pip install click
-RUN pip install confluent-kafka
+RUN pip install click==8.0.3
+RUN pip install confluent-kafka==2.2.0
 RUN pip install avro-python3
 
 COPY Lab_2_consumer.py .
