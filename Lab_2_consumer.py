@@ -31,10 +31,7 @@ def consume(topic: str):
         if msg is None:
             continue
         if msg.error():
-            if msg.error().code() == KafkaError._PARTITION_EOF:
-                print('Reached end of partition')
-            else:
-                print('Error while polling message:', msg.error())
+            print("Consumer error: {}".format(msg.error()))
             continue
 
 
