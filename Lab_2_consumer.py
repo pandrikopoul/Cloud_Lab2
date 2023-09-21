@@ -4,7 +4,7 @@ from avro.io import DatumReader, BinaryDecoder
 
 c = Consumer({
     'bootstrap.servers': '13.49.128.80:19093',
-    'group.id': 'simple_consumer',
+    'group.id': 'simple_consumer1',
     'auto.offset.reset': 'latest',
     'security.protocol': 'SSL',
     'ssl.ca.location': './client3/ca.crt',
