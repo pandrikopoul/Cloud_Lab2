@@ -42,7 +42,8 @@ def consume(topic: str):
         avro_message = msg.value()
 
         try:
-            reader = fastavro.schemaless_reader(io.BytesIO(avro_message))
+            schema = fastavro.schema.parse(load_schema(io.BytesIO(avro_message)))
+            reader = fastavro.schemaless_reader(io.BytesIO(avro_message), schema)
             print(reader)
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
