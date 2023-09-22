@@ -41,6 +41,7 @@ def consume(topic: str):
             # Αποκωδικοποίηση των μηνυμάτων Avro χρησιμοποιώντας το fastavro
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
+                first_message = next(decoded_message)
                 record_name = decoded_message['record_name']
                 print(f"First message record name: {record_name}")
                 print(decoded_message)
