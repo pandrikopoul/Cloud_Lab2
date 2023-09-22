@@ -3,9 +3,6 @@ import random
 import signal
 import io
 import fastavro
-from fastavro.schema import parse_schema
-from fastavro.schema import load_schema
-from fastavro.schema import extract_record_type
 from confluent_kafka import Consumer, KafkaError
 
 def signal_handler(sig, frame):
@@ -42,7 +39,7 @@ def consume(topic: str):
         avro_message = msg.value()
 
         try:
-            schema = fastavro.schema.parse(load_schema(io.BytesIO(avro_message)))
+            schema = fastavro.parse_schema(fastavro.schema.extract_schema(io.BytesIO(avro_message)))
             reader = fastavro.schemaless_reader(io.BytesIO(avro_message), schema)
             print(reader)
         except Exception as e:
