@@ -2,8 +2,7 @@ import click
 from confluent_kafka import Consumer, KafkaError
 import random
 import signal
-import avro.schema
-import io
+from avro.io import BinaryDecoder, DatumReader
 import fastavro
 
 def signal_handler(sig, frame):
@@ -23,8 +22,6 @@ c = Consumer({
     'enable.auto.commit': 'true',
     'ssl.endpoint.identification.algorithm': 'none',
 })
-
-
 
 @click.command()
 @click.argument('topic')
