@@ -39,7 +39,7 @@ def consume(topic: str):
 
         avro_message = msg.value()
         
-        # Εδώ αλλάζουμε τον τρόπο αποκωδικοποίησης
+       
         try:
             decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message))
             record_name = decoded_message['record_name']
