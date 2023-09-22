@@ -4,8 +4,6 @@ import signal
 import io
 import fastavro
 from confluent_kafka import Consumer, KafkaError
-import json
-
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
@@ -30,8 +28,6 @@ c = Consumer({
 def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
-    avro_schema = None
-
     while True:
         msg = c.poll(1.0)
         if msg is None:
@@ -43,15 +39,17 @@ def consume(topic: str):
         avro_message = msg.value()
 
         try:
-            avro_message_dict = json.loads(avro_message)
-            avro_schema = avro_message_dict.get('schema')
-            avro_payload = avro_message_dict.get('payload')
             
-            if avro_schema and avro_payload:
-                reader = fastavro.schemaless_reader(io.BytesIO(avro_payload), io.BytesIO(avro_schema))
-                print(reader)
-            else:
-                print("Invalid Avro message format.")
+
+            # Εξάγουμε το σχήμα από το μήνυμα Avro
+            decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
+            print(decoded_message)
+            # Τώρα έχουμε το σχήμα και τα δεδομένα
+            #record_name = decoded_message['record_name']
+           # data = decoded_message['deserialized_message']
+
+           # print(record_name)
+            #print(data)
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
