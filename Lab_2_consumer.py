@@ -1,5 +1,6 @@
 import click
 from confluent_kafka import Consumer, KafkaError
+import avro.schema
 import io
 import random
 import signal
