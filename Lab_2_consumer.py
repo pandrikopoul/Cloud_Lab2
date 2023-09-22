@@ -41,7 +41,8 @@ def consume(topic: str):
 
         avro_message = msg.value()  
         try:
-            avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message))
+            avro_schema = None
+            avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message),avro_schema)
             decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
             record_name = decoded_message['record_name']
             data = decoded_message['deserialized_message']
