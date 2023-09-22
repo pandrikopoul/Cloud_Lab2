@@ -22,23 +22,18 @@ c = Consumer({
     'ssl.endpoint.identification.algorithm': 'none',
 })
 
-
 @click.command()
 @click.argument('topic')
 def consume(topic: str):
-      c.subscribe(
-        [topic], 
-        on_assign=lambda _, p_list: print(p_list)
-    )
+    c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
-      while True:
+    while True:
         msg = c.poll(1.0)
         if msg is None:
             continue
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
             continue
-
 
         decoder = BinaryDecoder(msg.value())
         reader = DatumReader()
@@ -51,9 +46,5 @@ def consume(topic: str):
             print(data)
         else:
             print("Received NoneType message")
-
-        print(record_name)
-        print(data)
-
 
 consume()
