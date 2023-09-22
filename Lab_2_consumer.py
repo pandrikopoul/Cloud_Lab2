@@ -38,13 +38,13 @@ def consume(topic: str):
 
         avro_message = msg.value()
         try:
-            # Αποκωδικοποίηση των μηνυμάτων Avro χρησιμοποιώντας το fastavro
+           
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
                 
                 if 'name' in decoded_message:
                     print(f"The message header record_name: {decoded_message['name']}")
-              
+                    print("lineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 print(decoded_message)
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
