@@ -1,8 +1,10 @@
 import click
-import confluent_kafka
-import fastavro
+from confluent_kafka import Consumer, KafkaError
 import random
 import signal
+import avro.schema
+import io
+import fastavro
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
@@ -10,7 +12,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGTERM, signal_handler)
 
-c = confluent_kafka.Consumer({
+c = Consumer({
     'bootstrap.servers': '13.49.128.80:19093,13.49.128.80:29093,13.49.128.80:39093',
     'group.id': f"{random.random()}",
     'auto.offset.reset': 'latest',
@@ -28,24 +30,24 @@ def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
     while True:
+        msg = c.poll(1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print("Consumer error: {}".format(msg.error()))
+            continue
+
+        avro_message = msg.value()
+        
+        # Εδώ αλλάζουμε τον τρόπο αποκωδικοποίησης
         try:
-            msg = c.poll(1.0)
-            if msg is None:
-                continue
-            if msg.error():
-                print("Consumer error: {}".format(msg.error()))
-                continue
-
-            avro_message = msg.value()
-            reader = fastavro.schemaless_reader(avro_message, schema=None)
-
-            if reader is not None:
-                record_name = reader['record_name']
-                data = reader['deserialized_message']
-                print(record_name)
-                print(data)
-            else:
-                print("Received NoneType message")
+            decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message))
+            record_name = decoded_message['record_name']
+            data = decoded_message['deserialized_message']
+            print(record_name)
+            print(data)
+        except fastavro.read.FastavroError as e:
+            print(f"Fastavro error: {e}")
         except Exception as e:
             print(f"Error: {e}")
 
