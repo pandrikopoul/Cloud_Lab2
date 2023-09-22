@@ -24,7 +24,7 @@ c = Consumer({
     'ssl.endpoint.identification.algorithm': 'none',
 })
 
-avro_schema = None 
+
 
 @click.command()
 @click.argument('topic')
@@ -41,7 +41,8 @@ def consume(topic: str):
 
         avro_message = msg.value()  
         try:
-            decoded_message, avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
+            avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message))
+            decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
             record_name = decoded_message['record_name']
             data = decoded_message['deserialized_message']
             print(record_name)
