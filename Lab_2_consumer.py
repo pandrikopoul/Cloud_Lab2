@@ -1,14 +1,11 @@
 import click
 from confluent_kafka import Consumer, KafkaError
-import avro.schema
 import io
 import random
 import signal
 from avro.io import BinaryDecoder, DatumReader
 import fastavro
-from avro.datafile import DataFileReader
-
-
+import json
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
@@ -41,18 +38,17 @@ def consume(topic: str):
             print("Consumer error: {}".format(msg.error()))
             continue
 
-        avro_message = msg.value()  
+        avro_message = msg.value()
         try:
-            reader = DataFileReader(io.BytesIO(avro_message), DatumReader())
-            first_message = next(reader)
-            avro_schema = avro.schema.parse(first_message['schema'])
-
-            reader = DataFileReader(io.BytesIO(avro_message), DatumReader())
-            for message in reader:
-                decoder = BinaryDecoder(message['payload'])
-                reader = DatumReader(avro_schema)
-                decoded_message = reader.read(decoder)
-                print(decoded_message)
+            avro_message_dict = json.loads(avro_message)
+            avro_schema = avro_message_dict.get('schema')
+            avro_payload = avro_message_dict.get('payload')
+            
+            if avro_schema and avro_payload:
+                reader = fastavro.schemaless_reader(io.BytesIO(avro_payload), avro_schema)
+                print(reader)
+            else:
+                print("Invalid Avro message format.")
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
