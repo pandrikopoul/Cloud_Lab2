@@ -40,8 +40,8 @@ def consume(topic: str):
         decoded_message = reader.read(decoder)
 
         if decoded_message is not None:
-            record_name = decoded_message['record_name']
-            data = decoded_message['deserialized_message']
+            record_name = decoded_message['name']
+            data = decoded_message['fields']
             print(record_name)
             print(data)
         else:
