@@ -35,7 +35,7 @@ def consume(topic: str):
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
             continue
-        print(msg.header())
+        print(msg.header("record_name"))
         avro_message = msg.value()
         try:
            
