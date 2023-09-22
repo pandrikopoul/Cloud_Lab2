@@ -24,7 +24,7 @@ c = Consumer({
     'ssl.endpoint.identification.algorithm': 'none',
 })
 
-avro_schema = None  # Αρχικοποιήστε το σχήμα ως None
+avro_schema = None 
 
 @click.command()
 @click.argument('topic')
@@ -39,7 +39,7 @@ def consume(topic: str):
             print("Consumer error: {}".format(msg.error()))
             continue
 
-        avro_message = msg.value()  # Αποθηκεύστε το μήνυμα Avro σε μια μεταβλητή
+        avro_message = msg.value()  
         try:
             decoded_message, avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
             record_name = decoded_message['record_name']
