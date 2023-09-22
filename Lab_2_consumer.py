@@ -42,8 +42,8 @@ def consume(topic: str):
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
                 
-                if 'name' in decoded_message:
-                    print(f"The message header record_name: {decoded_message['name']}")
+                if 'header' in decoded_message:
+                    print(f"The message header record_name: {decoded_message['header']}")
                     print("lineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 print(decoded_message)
         except Exception as e:
