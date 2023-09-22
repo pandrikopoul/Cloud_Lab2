@@ -1,9 +1,10 @@
 import click
+from confluent_kafka import Consumer, KafkaError
+import io
 import random
 import signal
-import io
-import fastavro
-from confluent_kafka import Consumer, KafkaError
+import avro.io  # Εισάγετε την αντίστοιχη βιβλιοθήκη του Avro
+import json
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
@@ -37,19 +38,19 @@ def consume(topic: str):
             continue
 
         avro_message = msg.value()
-
         try:
-            
+            avro_message_dict = json.loads(avro_message)
+            avro_schema = avro_message_dict.get('schema')
+            avro_payload = avro_message_dict.get('payload')
 
-            # Εξάγουμε το σχήμα από το μήνυμα Avro
-            decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
-            print(decoded_message)
-            # Τώρα έχουμε το σχήμα και τα δεδομένα
-            #record_name = decoded_message['record_name']
-           # data = decoded_message['deserialized_message']
-
-           # print(record_name)
-            #print(data)
+            if avro_schema and avro_payload:
+                schema = avro.io.Schema.parse(avro_schema)  # Μετατροπή του σχήματος Avro σε αντικείμενο schema
+                reader = avro.io.BinaryDecoder(io.BytesIO(avro_payload))
+                datum_reader = avro.io.DatumReader(schema)
+                decoded_message = datum_reader.read(reader)
+                print(decoded_message)
+            else:
+                print("Invalid Avro message format.")
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
