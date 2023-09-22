@@ -37,18 +37,13 @@ def consume(topic: str):
             print("Consumer error: {}".format(msg.error()))
             continue
 
-        avro_message = msg.value()
-        
-       
         try:
             decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message))
             record_name = decoded_message['record_name']
             data = decoded_message['deserialized_message']
             print(record_name)
             print(data)
-        except fastavro.error.FastavroError as e:
-            print(f"Fastavro error: {e}")
-        except Exception as e:
-            print(f"Error: {e}")
+        except fastavro._read.FastavroError as e:
+            print(f"Error decoding Avro message: {e}")
 
 consume()
