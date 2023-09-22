@@ -29,7 +29,7 @@ c = Consumer({
 def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
-    while True:
+   while True:
         msg = c.poll(1.0)
         if msg is None:
             continue
@@ -37,13 +37,14 @@ def consume(topic: str):
             print("Consumer error: {}".format(msg.error()))
             continue
 
+        avro_message = msg.value()  # Αποθηκεύστε το μήνυμα Avro σε μια μεταβλητή
         try:
             decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message))
             record_name = decoded_message['record_name']
             data = decoded_message['deserialized_message']
             print(record_name)
             print(data)
-        except fastavro._read.FastavroError as e:
+        except fastavro.error.FastavroError as e:
             print(f"Error decoding Avro message: {e}")
 
 consume()
