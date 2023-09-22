@@ -37,11 +37,11 @@ def consume(topic: str):
                 continue
 
             avro_message = msg.value()
-            decoded_message = fastavro.schemaless_reader(avro_message)
+            reader = fastavro.schemaless_reader(avro_message, schema=None)
 
-            if decoded_message is not None:
-                record_name = decoded_message['record_name']
-                data = decoded_message['deserialized_message']
+            if reader is not None:
+                record_name = reader['record_name']
+                data = reader['deserialized_message']
                 print(record_name)
                 print(data)
             else:
