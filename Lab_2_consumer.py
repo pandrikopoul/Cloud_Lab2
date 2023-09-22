@@ -46,7 +46,7 @@ def consume(topic: str):
             data = decoded_message['deserialized_message']
             print(record_name)
             print(data)
-        except except fastavro.schema.FastavroError as e:
+        except fastavro.schema.FastavroError as e:
             print(f"Fastavro error: {e}")
         except Exception as e:
             print(f"Error: {e}")
