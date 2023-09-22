@@ -38,14 +38,17 @@ def consume(topic: str):
 
         avro_message = msg.value()  
         try:
-            avro_schema = None
-            avro_schema = fastavro.schemaless_reader(io.BytesIO(avro_message),avro_schema)
-            decoded_message = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
-            record_name = decoded_message['record_name']
-            data = decoded_message['deserialized_message']
-            print(record_name)
-            print(data)
-        except fastavro.error.FastavroError as e:
+            reader = DataFileReader(io.BytesIO(avro_message), DatumReader())
+            first_message = next(reader)
+            avro_schema = avro.schema.parse(first_message['schema'])
+
+            reader = DataFileReader(io.BytesIO(avro_message), DatumReader())
+            for message in reader:
+                decoder = BinaryDecoder(message['payload'])
+                reader = DatumReader(avro_schema)
+                decoded_message = reader.read(decoder)
+                print(decoded_message)
+        except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
 consume()
