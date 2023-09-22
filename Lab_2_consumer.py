@@ -1,5 +1,6 @@
 import click
 from confluent_kafka import Consumer, KafkaError
+import io
 import random
 import signal
 from avro.io import BinaryDecoder, DatumReader
