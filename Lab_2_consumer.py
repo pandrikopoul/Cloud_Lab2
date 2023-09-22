@@ -29,7 +29,7 @@ c = Consumer({
 def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
-   while True:
+      while True:
         msg = c.poll(1.0)
         if msg is None:
             continue
