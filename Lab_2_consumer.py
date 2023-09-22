@@ -4,6 +4,9 @@ import random
 import signal
 from avro.io import BinaryDecoder, DatumReader
 import fastavro
+from avro.datafile import DataFileReader
+from avro.io import DatumReader
+
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
