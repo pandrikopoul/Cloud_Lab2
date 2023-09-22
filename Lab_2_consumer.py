@@ -4,6 +4,8 @@ import signal
 import io
 import fastavro
 from confluent_kafka import Consumer, KafkaError
+import json
+
 
 def signal_handler(sig, frame):
     print('EXITING SAFELY!')
