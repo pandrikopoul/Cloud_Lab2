@@ -28,6 +28,8 @@ c = Consumer({
 def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
 
+    avro_schema = None
+
     while True:
         msg = c.poll(1.0)
         if msg is None:
@@ -39,9 +41,15 @@ def consume(topic: str):
         avro_message = msg.value()
 
         try:
-            avro_schema = None
-            reader = fastavro.schemaless_reader(io.BytesIO(avro_message), avro_schema)
-            print(reader)
+            avro_message_dict = json.loads(avro_message)
+            avro_schema = avro_message_dict.get('schema')
+            avro_payload = avro_message_dict.get('payload')
+            
+            if avro_schema and avro_payload:
+                reader = fastavro.schemaless_reader(io.BytesIO(avro_payload), io.BytesIO(avro_schema))
+                print(reader)
+            else:
+                print("Invalid Avro message format.")
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
