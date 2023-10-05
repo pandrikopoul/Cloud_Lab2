@@ -40,10 +40,11 @@ def consume(topic: str):
         try:
            
             reader = fastavro.reader(io.BytesIO(avro_message))
+            print(reader[0]['experiment'])
             for decoded_message in reader:
                 
                 
-                print(decoded_message['experiment'])
+               # print(decoded_message['experiment'])
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
