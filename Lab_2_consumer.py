@@ -35,7 +35,7 @@ def consume(topic: str):
         if msg.error():
             print("Consumer error: {}".format(msg.error()))
             continue
-        print(msg.headers())
+        print(msg.headers()[0][1])
         avro_message = msg.value()
         try:
            
@@ -43,7 +43,7 @@ def consume(topic: str):
             for decoded_message in reader:
                 
                 
-                print(decoded_message)
+                print(decoded_message['experiment'])
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
