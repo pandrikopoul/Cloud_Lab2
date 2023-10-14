@@ -42,6 +42,7 @@ def consume(topic: str):
             reader = fastavro.reader(io.BytesIO(avro_message))
        
             for decoded_message in reader:
+                print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 
                 
                 print(decoded_message)
