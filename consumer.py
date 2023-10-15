@@ -152,7 +152,7 @@ def consume(topic: str):
                     experiment_dict[experiment]['sensor_counter'] = 0
                     experiment_dict[experiment]['avg_temp'] = 0
 
-                print(decoded_message)
+               # print(decoded_message)
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
