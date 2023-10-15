@@ -70,10 +70,10 @@ def consume(topic: str):
 
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
-                print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                #print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 
                 
-                print(decoded_message)
+                #print(decoded_message)
                 
                 if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                     
@@ -101,7 +101,7 @@ def consume(topic: str):
                     if experiment_dict[experiment]['avg_temp'] <= experiment_dict[experiment]['temperature_range']['upper_threshold'] and experiment_dict[experiment]['avg_temp'] >= experiment_dict[experiment]['temperature_range']['lower_threshold'] and experiment_dict[experiment]['senor_counter']==len(experiment_dict[experiment]['sensors']):
                         #send notification
                         print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
-                        print(notifcation_type.Stabilised,experiment_dict[experiment]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment]['experiment_id'],decoded_message['measurement_hash'])
+                        print(notifcation_type.Stabilised,experiment_dict[experiment]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment]['experiment_id'],decoded_message['measurement_hash'])
                         # async with grpc.aio.insecure_channel(server_address) as channel:
                         #     stub = NotifierServiceStub(channel)
                         #
@@ -132,7 +132,7 @@ def consume(topic: str):
                             print(
                                 '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
                             print(notifcation_type.Stabilised, experiment_dict[experiment]['researcher'],
-                                  decoded_message['measurment_id'], experiment_dict[experiment]['experiment_id'],
+                                  decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
                                   decoded_message['measurement_hash'])
                         
                             
@@ -149,7 +149,7 @@ def consume(topic: str):
                         if  experiment_dict[experiment]['out_of_rng'] == False and not (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']):
                             print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
                             print(notifcation_type.out_of_range, experiment_dict[experiment]['researcher'],
-                                  decoded_message['measurment_id'], experiment_dict[experiment]['experiment_id'],
+                                  decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
                                   decoded_message['measurement_hash'])
                             
                             # async with grpc.aio.insecure_channel(server_address) as channel:
