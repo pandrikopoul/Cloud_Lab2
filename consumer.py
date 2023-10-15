@@ -99,7 +99,7 @@ def consume(topic: str):
                     'temperature_range': decoded_message['temperature_range']
                 }
                 
-                experiment_k=experiment_k+1   
+                   
 
             if msg.headers()[0][1] == b'stabilization_started':
             
@@ -179,6 +179,7 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
+    experiment_k=experiment_k+1
 
 
 if __name__ == "__main__":
