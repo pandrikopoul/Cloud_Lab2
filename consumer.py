@@ -70,7 +70,7 @@ def consume(topic: str):
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
                 
-                if msg.headers()[0][1] == "'experiment_configured'": # store the values related to the configuration of the experiment in to a dictionary
+                if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                     
 
                     experiment = decoded_message['experiment']
@@ -82,11 +82,11 @@ def consume(topic: str):
                     experiment_dict[experiment] ['researcher'] = decoded_message['researcher']
                     experiment_dict[experiment] ['sensors'] = decoded_message['sensors']
                     data_dict[experiment] ['temperature_range'] = decoded_message['temperature_range']
-                if msg.headers()[0][1] == "b'stabilization_started'":
+                if msg.headers()[0][1] == b'stabilization_started':
                 
                     experiment_dict[experiment]['stabilization_flag'] = True
 
-                if msg.headers()[0][1] == "b'sensor_temperature_measured'" and experiment_dict[experiment]['stabilization_flag']==True:
+                if msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment]['stabilization_flag']==True:
                     
                     experiment_dict[experiment]['sensor_counter']+=1
                     experiment_dict[experiment]['avg_temp']+=decoded_message['temperature']
@@ -107,7 +107,7 @@ def consume(topic: str):
                         experiment_dict[experiment]['sensor_counter'] = 0
                         experiment_dict[experiment]['avg_temp'] = 0
 
-                elif msg.headers()[0][1] == "b'sensor_temperature_measured'" and experiment_dict[experiment]['stabilization_flag']==False :
+                elif msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment]['stabilization_flag']==False :
                     
                     experiment_dict[experiment]['sensor_counter'] += 1
                     experiment_dict[experiment]['avg_temp'] += decoded_message['temperature']
