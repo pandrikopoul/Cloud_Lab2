@@ -10,4 +10,6 @@ WORKDIR /usr/src/app
 
 COPY consumer.py .
 
+VOLUME ["/usr/src/app/auth"]
+
 ENTRYPOINT ["python3", "consumer.py" ]
