@@ -7,7 +7,7 @@ RUN pip install --upgrade fastavro
 
 RUN pip install enum34
 RUN pip install asyncio
-RUN pip install grpc
+RUN pip install grpcio
 
 
 WORKDIR /usr/src/app
