@@ -10,6 +10,7 @@ import grpc
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
+experiment = None
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
 async def send_notification(stub,notificatio_type,researcher,measurment_id,experiment_id,cipher_data):
