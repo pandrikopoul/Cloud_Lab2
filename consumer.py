@@ -29,7 +29,7 @@ class notifcation_type(Enum):
     out_of_range = 'OutOfRange'
 
 
-experiment_dict = {}
+
 #stabilization_flag= False
 #out_of_rng=False
 def signal_handler(sig, frame):
@@ -55,11 +55,12 @@ c = Consumer({
 @click.command()
 @click.argument('topic')
 def consume(topic: str):
+    experiment_dict = {}
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
     
 
     while True:
-        experiment_k =0
+        experiment_k =1
         msg = c.poll(1.0)
         if msg is None:
             continue
