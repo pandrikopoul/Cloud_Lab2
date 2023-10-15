@@ -10,7 +10,7 @@ import grpc
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
-experiment = None
+experiment = 0
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
 async def send_notification(stub,notificatio_type,researcher,measurment_id,experiment_id,cipher_data):
@@ -81,15 +81,15 @@ def consume(topic: str):
                     print(decoded_message['researcher'])
                     print(decoded_message['sensors'])
                     print(decoded_message['temperature_range'])
-                    experiment = str(decoded_message['experiment'])
-                    experiment_dict[experiment]['experiment_id'] = str(decoded_message['experiment'])
+                    experiment +=1 #str(decoded_message['experiment'])
+                    experiment_dict[experiment]['experiment_id'] = decoded_message['experiment']
                     experiment_dict[experiment]['out_of_rng'] = False
                     experiment_dict[experiment]['stabilization_flag'] = False
                     experiment_dict[experiment]['avg_temp'] = 0
                     experiment_dict[experiment]['sensor_counter'] = 0
-                    experiment_dict[experiment] ['researcher'] = str(decoded_message['researcher'])
-                    experiment_dict[experiment] ['sensors'] = str(decoded_message['sensors'])
-                    data_dict[experiment] ['temperature_range'] = str(decoded_message['temperature_range'])
+                    experiment_dict[experiment] ['researcher'] = decoded_message['researcher']
+                    experiment_dict[experiment] ['sensors'] = decoded_message['sensors']
+                    data_dict[experiment] ['temperature_range'] = decoded_message['temperature_range']
                 if msg.headers()[0][1] == b'stabilization_started':
                 
                     experiment_dict[experiment]['stabilization_flag'] = True
