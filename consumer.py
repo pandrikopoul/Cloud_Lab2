@@ -72,113 +72,113 @@ def consume(topic: str):
             continue
 
         avro_message = msg.value()
-        try:
+        #try:
 
-            reader = fastavro.reader(io.BytesIO(avro_message))
-            for decoded_message in reader:
-                #print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        reader = fastavro.reader(io.BytesIO(avro_message))
+        for decoded_message in reader:
+            #print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            
+            
+            #print(decoded_message)
+            
+            if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                 
+                print(decoded_message['experiment'])
+                print(decoded_message['researcher'])
+                print(decoded_message['sensors'])
+                print(decoded_message['temperature_range'])
+               # experiment_k +=1 #str(decoded_message['experiment'])
+                experiment_dict[experiment_k] = {
+                    'experiment_id': decoded_message['experiment'],
+                    'out_of_rng': False,
+                    'stabilization_flag': False,
+                    'avg_temp': 0,
+                    'sensor_counter': 0,
+                    'researcher': decoded_message['researcher'],
+                    'sensors': decoded_message['sensors'],
+                    'temperature_range': decoded_message['temperature_range']
+                }
                 
-                #print(decoded_message)
+                experiment_k=experiment_k+1   
+
+            if msg.headers()[0][1] == b'stabilization_started':
+            
+                experiment_dict[experiment_k]['stabilization_flag'] = True
+
+            if msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==True:
                 
-                if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
-                    
-                    print(decoded_message['experiment'])
-                    print(decoded_message['researcher'])
-                    print(decoded_message['sensors'])
-                    print(decoded_message['temperature_range'])
-                   # experiment_k +=1 #str(decoded_message['experiment'])
-                    experiment_dict[experiment_k] = {
-                        'experiment_id': decoded_message['experiment'],
-                        'out_of_rng': False,
-                        'stabilization_flag': False,
-                        'avg_temp': 0,
-                        'sensor_counter': 0,
-                        'researcher': decoded_message['researcher'],
-                        'sensors': decoded_message['sensors'],
-                        'temperature_range': decoded_message['temperature_range']
-                    }
-                    
-                    experiment_k=experiment_k+1   
-    
-                if msg.headers()[0][1] == b'stabilization_started':
-                
-                    experiment_dict[experiment_k]['stabilization_flag'] = True
+                experiment_dict[experiment_k]['sensor_counter']+=1
+                experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
+                if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
+                    experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
 
-                if msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==True:
-                    
-                    experiment_dict[experiment_k]['sensor_counter']+=1
-                    experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
-                    if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
-                        experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
-
-                    if experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['senor_counter']==len(experiment_dict[experiment_k]['sensors']):
-                        #send notification
-                        print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
-                        #print(notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash'])
-                        # async with grpc.aio.insecure_channel(server_address) as channel:
-                        #     stub = NotifierServiceStub(channel)
-                        #
-                        #     tasks = [asyncio.create_task(send_notification(stub,notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
-                        #
-                        #     await asyncio.gather(*tasks)
-                        experiment_dict[experiment_k]['stabilization_flag']=False
-                        experiment_dict[experiment_k]['sensor_counter'] = 0
-                        experiment_dict[experiment_k]['avg_temp'] = 0
-
-                elif msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==False :
-                    
-                    experiment_dict[experiment_k]['sensor_counter'] += 1
-                    experiment_dict[experiment_k]['avg_temp'] += decoded_message['temperature']
-                    if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
-                        experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp'] / len(
-                            experiment_dict[experiment_k]['sensors'])
-
-                    if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
-                        #add temperature
-                        print('-----------------------------------Add tepmerature to the database.-----------------------------------------------')
-                        #print(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp'])
-                        #print(add_temperature(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp']))
-
-
-                        if experiment_dict[experiment_k]['out_of_rng']==True and (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']) :
-                            #send notification
-                            print(
-                                '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
-                            #print(notifcation_type.Stabilised, experiment_dict[experiment_k]['researcher'],
-                             #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
-                              #    decoded_message['measurement_hash'])
-                        
-                            
-                            # async with grpc.aio.insecure_channel(server_address) as channel:
-                            #     stub = NotifierServiceStub(channel)
-                            # 
-                            #     tasks = [asyncio.create_task(send_notification(stub, notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
-                            # 
-                            #     await asyncio.gather(*tasks)
-
-                            experiment_dict[experiment_k]['out_of_rng']=False
-
-
-                        if  experiment_dict[experiment_k]['out_of_rng'] == False and not (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']):
-                            print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
-                            #print(notifcation_type.out_of_range, experiment_dict[experiment_k]['researcher'],
-                             #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
-                              #    decoded_message['measurement_hash'])
-                            
-                            # async with grpc.aio.insecure_channel(server_address) as channel:
-                            #     stub = NotifierServiceStub(channel)
-                            # 
-                            #     tasks = [asyncio.create_task(send_notification(stub, notifcation_type.out_of_range,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
-                            # 
-                            #     await asyncio.gather(*tasks)
-                            experiment_dict[experiment_k]['out_of_rng']=True
+                if experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['senor_counter']==len(experiment_dict[experiment_k]['sensors']):
+                    #send notification
+                    print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
+                    #print(notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash'])
+                    # async with grpc.aio.insecure_channel(server_address) as channel:
+                    #     stub = NotifierServiceStub(channel)
+                    #
+                    #     tasks = [asyncio.create_task(send_notification(stub,notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
+                    #
+                    #     await asyncio.gather(*tasks)
+                    experiment_dict[experiment_k]['stabilization_flag']=False
                     experiment_dict[experiment_k]['sensor_counter'] = 0
                     experiment_dict[experiment_k]['avg_temp'] = 0
 
-                #print(decoded_message)
-        except Exception as e:
-            print(f"Error decoding Avro message: {e}")
+            elif msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==False :
+                
+                experiment_dict[experiment_k]['sensor_counter'] += 1
+                experiment_dict[experiment_k]['avg_temp'] += decoded_message['temperature']
+                if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
+                    experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp'] / len(
+                        experiment_dict[experiment_k]['sensors'])
+
+                if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
+                    #add temperature
+                    print('-----------------------------------Add tepmerature to the database.-----------------------------------------------')
+                    #print(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp'])
+                    #print(add_temperature(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp']))
+
+
+                    if experiment_dict[experiment_k]['out_of_rng']==True and (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']) :
+                        #send notification
+                        print(
+                            '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
+                        #print(notifcation_type.Stabilised, experiment_dict[experiment_k]['researcher'],
+                         #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
+                          #    decoded_message['measurement_hash'])
+                    
+                        
+                        # async with grpc.aio.insecure_channel(server_address) as channel:
+                        #     stub = NotifierServiceStub(channel)
+                        # 
+                        #     tasks = [asyncio.create_task(send_notification(stub, notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
+                        # 
+                        #     await asyncio.gather(*tasks)
+
+                        experiment_dict[experiment_k]['out_of_rng']=False
+
+
+                    if  experiment_dict[experiment_k]['out_of_rng'] == False and not (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']):
+                        print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
+                        #print(notifcation_type.out_of_range, experiment_dict[experiment_k]['researcher'],
+                         #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
+                          #    decoded_message['measurement_hash'])
+                        
+                        # async with grpc.aio.insecure_channel(server_address) as channel:
+                        #     stub = NotifierServiceStub(channel)
+                        # 
+                        #     tasks = [asyncio.create_task(send_notification(stub, notifcation_type.out_of_range,experiment_dict[experiment_k]['researcher'],decoded_message['measurment_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash']))]
+                        # 
+                        #     await asyncio.gather(*tasks)
+                        experiment_dict[experiment_k]['out_of_rng']=True
+                experiment_dict[experiment_k]['sensor_counter'] = 0
+                experiment_dict[experiment_k]['avg_temp'] = 0
+
+            #print(decoded_message)
+       # except Exception as e:
+       #     print(f"Error decoding Avro message: {e}")
 
 
 if __name__ == "__main__":
