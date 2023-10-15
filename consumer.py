@@ -198,8 +198,8 @@ def consume(topic: str):
                         # 
                         #     await asyncio.gather(*tasks)
                         experiment_dict[experiment_k]['out_of_rng']=True
-                experiment_dict[experiment_k]['sensor_counter'] = 0
-                experiment_dict[experiment_k]['avg_temp'] = 0
+                    experiment_dict[experiment_k]['sensor_counter'] = 0
+                    experiment_dict[experiment_k]['avg_temp'] = 0
 
             #print(decoded_message)
        # except Exception as e:
