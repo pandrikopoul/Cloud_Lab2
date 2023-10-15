@@ -69,6 +69,7 @@ def consume(topic: str):
 
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
+                print(msg.headers()[0][1])
                 if msg.headers()[0][1] == "experiment_configured": # store the values related to the configuration of the experiment in to a dictionary
                     print("headers== experiment configured")
 
