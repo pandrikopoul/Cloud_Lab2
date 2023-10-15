@@ -10,6 +10,8 @@ import grpc
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
+experiment_dict = {}
+experiment_k=0
 
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
@@ -60,7 +62,7 @@ def consume(topic: str):
     
 
     while True:
-        experiment_k =1
+        experiment_k +=1
         msg = c.poll(1.0)
         if msg is None:
             continue
@@ -84,15 +86,17 @@ def consume(topic: str):
                     print(decoded_message['researcher'])
                     print(decoded_message['sensors'])
                     print(decoded_message['temperature_range'])
-                    experiment_k +=1 #str(decoded_message['experiment'])
-                    experiment_dict[experiment_k]['experiment_id'] = decoded_message['experiment']
-                    experiment_dict[experiment_k]['out_of_rng'] = False
-                    experiment_dict[experiment_k]['stabilization_flag'] = False
-                    experiment_dict[experiment_k]['avg_temp'] = 0
-                    experiment_dict[experiment_k]['sensor_counter'] = 0
-                    experiment_dict[experiment_k] ['researcher'] = decoded_message['researcher']
-                    experiment_dict[experiment_k] ['sensors'] = decoded_message['sensors']
-                    data_dict[experiment_k] ['temperature_range'] = decoded_message['temperature_range']
+                   # experiment_k +=1 #str(decoded_message['experiment'])
+                   experiment_dict[experiment_k] = {
+                        'experiment_id': decoded_message['experiment'],
+                        'out_of_rng': False,
+                        'stabilization_flag': False,
+                        'avg_temp': 0,
+                        'sensor_counter': 0,
+                        'researcher': decoded_message['researcher'],
+                        'sensors': decoded_message['sensors'],
+                        'temperature_range': decoded_message['temperature_range']
+    }
                 if msg.headers()[0][1] == b'stabilization_started':
                 
                     experiment_dict[experiment_k]['stabilization_flag'] = True
