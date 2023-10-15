@@ -56,6 +56,7 @@ c = Consumer({
 @click.argument('topic')
 def consume(topic: str):
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
+    experiment_k =0
 
     while True:
         msg = c.poll(1.0)
