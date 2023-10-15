@@ -97,7 +97,8 @@ def consume(topic: str):
                         'researcher': decoded_message['researcher'],
                         'sensors': decoded_message['sensors'],
                         'temperature_range': decoded_message['temperature_range']
-                    experiment_k +=1   
+                    
+                    experiment_k=experiment_k+1   
     }
                 if msg.headers()[0][1] == b'stabilization_started':
                 
