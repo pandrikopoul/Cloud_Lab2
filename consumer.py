@@ -10,8 +10,7 @@ import grpc
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
-experiment_dict = {}
-experiment_k=0
+
 
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
@@ -58,6 +57,8 @@ c = Consumer({
 @click.argument('topic')
 def consume(topic: str):
     experiment_dict = {}
+    experiment_k=0
+   
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
     
 
