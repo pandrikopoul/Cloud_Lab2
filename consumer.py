@@ -7,6 +7,7 @@ from confluent_kafka import Consumer, KafkaError
 from enum import Enum
 import asyncio
 import grpc
+import time
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
@@ -103,11 +104,13 @@ def consume(topic: str):
 
             if msg.headers()[0][1] == b'stabilization_started':
                 print("----------stabilization started---------------")
+                time.sleep(2)
             
                 experiment_dict[experiment_k]['stabilization_flag'] = True
 
             if msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==True:
                 print("----------sensor temperature measured and stabilization flag - true---------------")
+                time.sleep(2)
                 
                 experiment_dict[experiment_k]['sensor_counter']+=1
                 experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
@@ -124,9 +127,11 @@ def consume(topic: str):
                 print(experiment_dict[experiment_k]['avg_temp'])
                 print(experiment_dict[experiment_k]['temperature_range']['upper_threshold'])
                 print( experiment_dict[experiment_k]['temperature_range']['lower_threshold'])
+                time.sleep(2)
                 if experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['senor_counter']==len(experiment_dict[experiment_k]['sensors']):
                     #send notification
                     print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
+                    time.sleep(2)
                     #print(notifcation_type.Stabilised,experiment_dict[experiment_k]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment_k]['experiment_id'],decoded_message['measurement_hash'])
                     # async with grpc.aio.insecure_channel(server_address) as channel:
                     #     stub = NotifierServiceStub(channel)
@@ -140,6 +145,7 @@ def consume(topic: str):
 
             elif msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==False :
                 print("----------sensor temperature measured and stabilization flag - false---------------")
+                time.sleep(2)
                 
                 experiment_dict[experiment_k]['sensor_counter'] += 1
                 experiment_dict[experiment_k]['avg_temp'] += decoded_message['temperature']
@@ -150,6 +156,7 @@ def consume(topic: str):
                 if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
                     #add temperature
                     print('-----------------------------------Add tepmerature to the database.-----------------------------------------------')
+                    time.sleep(2)
                     #print(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp'])
                     #print(add_temperature(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp']))
 
@@ -158,6 +165,7 @@ def consume(topic: str):
                         #send notification
                         print(
                             '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
+                        time.sleep(2)
                         #print(notifcation_type.Stabilised, experiment_dict[experiment_k]['researcher'],
                          #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
                           #    decoded_message['measurement_hash'])
@@ -175,6 +183,7 @@ def consume(topic: str):
 
                     if  experiment_dict[experiment_k]['out_of_rng'] == False and not (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']):
                         print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
+                        time.sleep(2)
                         #print(notifcation_type.out_of_range, experiment_dict[experiment_k]['researcher'],
                          #     decoded_message['measurement_id'], experiment_dict[experiment_k]['experiment_id'],
                           #    decoded_message['measurement_hash'])
