@@ -77,7 +77,7 @@ def consume(topic: str):
                 
                 if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                     
-
+                    print(decoded_message['experiment'])
                     experiment = decoded_message['experiment']
                     experiment_dict[experiment]['experiment_id'] = decoded_message['experiment']
                     experiment_dict[experiment]['out_of_rng'] = False
