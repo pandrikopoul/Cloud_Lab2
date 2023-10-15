@@ -79,14 +79,14 @@ def consume(topic: str):
                     
                     print(decoded_message['experiment'])
                     experiment = decoded_message['experiment']
-                    experiment_dict[experiment]['experiment_id'] = decoded_message['experiment']
+                    experiment_dict[experiment]['experiment_id'] = str(decoded_message['experiment'])
                     experiment_dict[experiment]['out_of_rng'] = False
                     experiment_dict[experiment]['stabilization_flag'] = False
                     experiment_dict[experiment]['avg_temp'] = 0
                     experiment_dict[experiment]['sensor_counter'] = 0
-                    experiment_dict[experiment] ['researcher'] = decoded_message['researcher']
-                    experiment_dict[experiment] ['sensors'] = decoded_message['sensors']
-                    data_dict[experiment] ['temperature_range'] = decoded_message['temperature_range']
+                    experiment_dict[experiment] ['researcher'] = str(decoded_message['researcher'])
+                    experiment_dict[experiment] ['sensors'] = str(decoded_message['sensors'])
+                    data_dict[experiment] ['temperature_range'] = str(decoded_message['temperature_range'])
                 if msg.headers()[0][1] == b'stabilization_started':
                 
                     experiment_dict[experiment]['stabilization_flag'] = True
