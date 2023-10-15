@@ -57,7 +57,7 @@ c = Consumer({
 @click.argument('topic')
 def consume(topic: str):
     experiment_dict = {}
-    experiment_k=0
+    experiment_k=1
    
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
     
