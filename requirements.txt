@@ -1,0 +1,4 @@
+click==8.1.7
+confluent-kafka==2.2.0
+avro==1.11.3
+grpcio
