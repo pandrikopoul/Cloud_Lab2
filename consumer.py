@@ -164,7 +164,7 @@ def consume(topic: str):
                     #print(add_temperature(experiment_dict[experiment_k]['experiment_id'],experiment_dict['experiment_k']['temperature_range'],experiment_dict[experiment_k]['avg_temp'],decoded_message['timestamp']))
 
 
-                    if experiment_dict[experiment_k]['out_of_rng']==True and (decoded_message['temperature'] >= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] <= decoded_message['temperature_range']['lower_threshold']) :
+                    if experiment_dict[experiment_k]['out_of_rng']==True and (decoded_message['temperature'] >= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and decoded_message['temperature'] <= experiment_dict[experiment_k]['temperature_range']['lower_threshold']) :
                         #send notification
                         print(
                             '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
@@ -184,7 +184,7 @@ def consume(topic: str):
                         experiment_dict[experiment_k]['out_of_rng']=False
 
 
-                    if  experiment_dict[experiment_k]['out_of_rng'] == False and not (decoded_message['temperature'] < decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] > decoded_message['temperature_range']['lower_threshold']):
+                    if  experiment_dict[experiment_k]['out_of_rng'] == False and not (decoded_message['temperature'] < experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and decoded_message['temperature'] > experiment_dict[experiment_k]['temperature_range']['lower_threshold']):
                         print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
                         time.sleep(2)
                         #print(notifcation_type.out_of_range, experiment_dict[experiment_k]['researcher'],
