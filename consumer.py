@@ -70,6 +70,7 @@ def consume(topic: str):
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
                 if msg.headers()[0][1] == "experiment_configured": # store the values related to the configuration of the experiment in to a dictionary
+                    print("headers== experiment configured")
 
                     experiment = decoded_message['experiment']
                     experiment_dict[experiment]['experiment_id'] = decoded_message['experiment']
@@ -81,9 +82,11 @@ def consume(topic: str):
                     experiment_dict[experiment] ['sensors'] = decoded_message['sensors']
                     data_dict[experiment] ['temperature_range'] = decoded_message['temperature_range']
                 if msg.headers()[0][1] == "stabilization_started":
+                    print("headers== stabilization started")
                     experiment_dict[experiment]['stabilization_flag'] = True
 
                 if msg.headers()[0][1] == "sensor_temperature_measured" and experiment_dict[experiment]['stabilization_flag']==True:
+                    print("headers== sensor temperature mesure and stabilizaton flag true")
                     experiment_dict[experiment]['sensor_counter']+=1
                     experiment_dict[experiment]['avg_temp']+=decoded_message['temperature']
                     if experiment_dict[experiment]['sensor_counter'] == len(experiment_dict[experiment]['sensors']):
@@ -104,6 +107,7 @@ def consume(topic: str):
                         experiment_dict[experiment]['avg_temp'] = 0
 
                 elif msg.headers()[0][1] == "sensor_temperature_measured" and experiment_dict[experiment]['stabilization_flag']==False :
+                    print("headers== sensor temperature measure and stabilization flag false")
                     experiment_dict[experiment]['sensor_counter'] += 1
                     experiment_dict[experiment]['avg_temp'] += decoded_message['temperature']
                     if experiment_dict[experiment]['sensor_counter'] == len(experiment_dict[experiment]['sensors']):
