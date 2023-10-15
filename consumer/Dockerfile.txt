@@ -10,7 +10,7 @@ RUN pip install signal
 RUN pip install io
 RUN pip install enum34
 RUN pip install asyncio
-RUN pip install grpcio
+RUN pip install grpc
 
 
 WORKDIR /usr/src/app
