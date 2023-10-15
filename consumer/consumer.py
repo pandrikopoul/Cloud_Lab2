@@ -7,8 +7,8 @@ from confluent_kafka import Consumer, KafkaError
 from enum import Enum
 import asyncio
 import grpc
-from generated_code import notification_pb2
-from generated_code import notification_pb2_grpc
+#from generated_code import notification_pb2
+#from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
