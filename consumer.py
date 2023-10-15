@@ -96,7 +96,7 @@ def consume(topic: str):
                         'sensor_counter': 0,
                         'researcher': decoded_message['researcher'],
                         'sensors': decoded_message['sensors'],
-                        'temperature_range': decoded_message['temperature_range']
+                        'temperature_range': decoded_message['temperature_range']}
                     
                     experiment_k=experiment_k+1   
     }
