@@ -102,10 +102,12 @@ def consume(topic: str):
                    
 
             if msg.headers()[0][1] == b'stabilization_started':
+                print("----------stabilization started---------------")
             
                 experiment_dict[experiment_k]['stabilization_flag'] = True
 
             if msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==True:
+                print("----------sensor temperature measured and stabilization flag - true---------------")
                 
                 experiment_dict[experiment_k]['sensor_counter']+=1
                 experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
@@ -127,6 +129,7 @@ def consume(topic: str):
                     experiment_dict[experiment_k]['avg_temp'] = 0
 
             elif msg.headers()[0][1] == b'sensor_temperature_measured' and experiment_dict[experiment_k]['stabilization_flag']==False :
+                print("----------sensor temperature measured and stabilization flag - false---------------")
                 
                 experiment_dict[experiment_k]['sensor_counter'] += 1
                 experiment_dict[experiment_k]['avg_temp'] += decoded_message['temperature']
