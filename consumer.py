@@ -117,8 +117,9 @@ def consume(topic: str):
                 print(len(experiment_dict[experiment_k]['sensors']))
                 if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
                     experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
-                    experiment_dict[experiment_k]['avg_temp']=0
-                    experiment_dict[experiment_k]['sensor_counter']=0
+                    if experiment_dict[experiment_k]['avg_temp'] > experiment_dict[experiment_k]['temperature_range']['upper_threshold'] or experiment_dict[experiment_k]['avg_temp'] < experiment_dict[experiment_k]['temperature_range']['lower_threshold'] :
+                        experiment_dict[experiment_k]['avg_temp']=0
+                        experiment_dict[experiment_k]['sensor_counter']=0
                     
                 print(experiment_dict[experiment_k]['avg_temp'])
                 print(experiment_dict[experiment_k]['temperature_range']['upper_threshold'])
