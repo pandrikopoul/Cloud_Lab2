@@ -131,7 +131,7 @@ def consume(topic: str):
                 print(experiment_dict[experiment_k]['temperature_range']['upper_threshold'])
                 print( experiment_dict[experiment_k]['temperature_range']['lower_threshold'])
                 time.sleep(2)
-                if experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['senor_counter']==len(experiment_dict[experiment_k]['sensors']):
+                if experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['sensor_counter']==len(experiment_dict[experiment_k]['sensors']):
                     #send notification
                     print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
                     time.sleep(2)
