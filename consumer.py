@@ -101,7 +101,7 @@ def consume(topic: str):
                     if experiment_dict[experiment]['avg_temp'] <= experiment_dict[experiment]['temperature_range']['upper_threshold'] and experiment_dict[experiment]['avg_temp'] >= experiment_dict[experiment]['temperature_range']['lower_threshold'] and experiment_dict[experiment]['senor_counter']==len(experiment_dict[experiment]['sensors']):
                         #send notification
                         print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
-                        print(notifcation_type.Stabilised,experiment_dict[experiment]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment]['experiment_id'],decoded_message['measurement_hash'])
+                        #print(notifcation_type.Stabilised,experiment_dict[experiment]['researcher'],decoded_message['measurement_id'],experiment_dict[experiment]['experiment_id'],decoded_message['measurement_hash'])
                         # async with grpc.aio.insecure_channel(server_address) as channel:
                         #     stub = NotifierServiceStub(channel)
                         #
@@ -123,7 +123,7 @@ def consume(topic: str):
                     if experiment_dict[experiment]['sensor_counter'] == len(experiment_dict[experiment]['sensors']):
                         #add temperature
                         print('-----------------------------------Add tepmerature to the database.-----------------------------------------------')
-                        print(experiment_dict[experiment]['experiment_id'],experiment_dict['experiment']['temperature_range'],experiment_dict[experiment]['avg_temp'],decoded_message['timestamp'])
+                        #print(experiment_dict[experiment]['experiment_id'],experiment_dict['experiment']['temperature_range'],experiment_dict[experiment]['avg_temp'],decoded_message['timestamp'])
                         #print(add_temperature(experiment_dict[experiment]['experiment_id'],experiment_dict['experiment']['temperature_range'],experiment_dict[experiment]['avg_temp'],decoded_message['timestamp']))
 
 
@@ -131,9 +131,9 @@ def consume(topic: str):
                             #send notification
                             print(
                                 '-----------------------------------The temperature was out of range but is stabilised Again . Send notification.-----------------------------------------------')
-                            print(notifcation_type.Stabilised, experiment_dict[experiment]['researcher'],
-                                  decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
-                                  decoded_message['measurement_hash'])
+                            #print(notifcation_type.Stabilised, experiment_dict[experiment]['researcher'],
+                             #     decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
+                              #    decoded_message['measurement_hash'])
                         
                             
                             # async with grpc.aio.insecure_channel(server_address) as channel:
@@ -148,9 +148,9 @@ def consume(topic: str):
 
                         if  experiment_dict[experiment]['out_of_rng'] == False and not (decoded_message['temperature'] <= decoded_message['temperature_range']['upper_threshold'] and decoded_message['temperature'] >= decoded_message['temperature_range']['lower_threshold']):
                             print('-----------------------------------The temperature is out of range. Send notification.-----------------------------------------------')
-                            print(notifcation_type.out_of_range, experiment_dict[experiment]['researcher'],
-                                  decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
-                                  decoded_message['measurement_hash'])
+                            #print(notifcation_type.out_of_range, experiment_dict[experiment]['researcher'],
+                             #     decoded_message['measurement_id'], experiment_dict[experiment]['experiment_id'],
+                              #    decoded_message['measurement_hash'])
                             
                             # async with grpc.aio.insecure_channel(server_address) as channel:
                             #     stub = NotifierServiceStub(channel)
