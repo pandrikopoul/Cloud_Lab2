@@ -89,7 +89,7 @@ def consume(topic: str):
                 print(decoded_message['sensors'])
                 print(decoded_message['temperature_range'])
                # experiment_k +=1 #str(decoded_message['experiment'])
-                experiment_dict[1] = {
+                experiment_dict[experiment_k] = {
                     'experiment_id': decoded_message['experiment'],
                     'out_of_rng': False,
                     'stabilization_flag': False,
@@ -204,7 +204,7 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
-    #experiment_k=experiment_k+1
+    experiment_k=experiment_k+1
 
 
 if __name__ == "__main__":
