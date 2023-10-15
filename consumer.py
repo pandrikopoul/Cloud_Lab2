@@ -70,6 +70,10 @@ def consume(topic: str):
 
             reader = fastavro.reader(io.BytesIO(avro_message))
             for decoded_message in reader:
+                print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                
+                
+                print(decoded_message)
                 
                 if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                     
@@ -158,7 +162,7 @@ def consume(topic: str):
                     experiment_dict[experiment]['sensor_counter'] = 0
                     experiment_dict[experiment]['avg_temp'] = 0
 
-                print(decoded_message)
+                #print(decoded_message)
         except Exception as e:
             print(f"Error decoding Avro message: {e}")
 
