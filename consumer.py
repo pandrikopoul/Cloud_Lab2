@@ -113,7 +113,10 @@ def consume(topic: str):
                 experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
                 if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
                     experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
-
+                    
+                print(experiment_dict[experiment_k]['avg_temp'])
+                print(experiment_dict[experiment_k]['temperature_range']['upper_threshold'])
+                print( experiment_dict[experiment_k]['temperature_range']['lower_threshold'])
                 if experiment_dict[experiment_k]['avg_temp'] <= experiment_dict[experiment_k]['temperature_range']['upper_threshold'] and experiment_dict[experiment_k]['avg_temp'] >= experiment_dict[experiment_k]['temperature_range']['lower_threshold'] and experiment_dict[experiment_k]['senor_counter']==len(experiment_dict[experiment_k]['sensors']):
                     #send notification
                     print('-----------------------------------The temperature is stabilised. Send notification.-----------------------------------------------')
@@ -182,7 +185,7 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
-    experiment_k=experiment_k+1
+    #experiment_k=experiment_k+1
 
 
 if __name__ == "__main__":
