@@ -113,7 +113,7 @@ def consume(topic: str):
                 experiment_dict[experiment_k]['avg_temp']+=decoded_message['temperature']
                 print("----------------------------Sensor counter--------------------------")
                 print(experiment_dict[experiment_k]['sensor_counter'])
-                rint("----------------------------Sensors len--------------------------")
+                print("----------------------------Sensors len--------------------------")
                 print(len(experiment_dict[experiment_k]['sensors']))
                 if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
                     experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
