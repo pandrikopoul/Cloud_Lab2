@@ -1,8 +1,10 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.8
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN pip install avro-python3
 RUN pip install --upgrade fastavro
+
 
 WORKDIR /usr/src/app
 
