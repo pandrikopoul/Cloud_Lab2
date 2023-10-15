@@ -1,9 +1,16 @@
 FROM python:3.8
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install click==8.0.3
+RUN pip install confluent-kafka==2.2.0
 RUN pip install avro-python3
 RUN pip install --upgrade fastavro
+
+RUN pip install random
+RUN pip install signal
+RUN pip install io
+RUN pip install enum34
+RUN pip install asyncio
+RUN pip install grpcio
 
 
 WORKDIR /usr/src/app
