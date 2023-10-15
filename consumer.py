@@ -100,7 +100,7 @@ def consume(topic: str):
                     }
                     
                     experiment_k=experiment_k+1   
-    }
+    
                 if msg.headers()[0][1] == b'stabilization_started':
                 
                     experiment_dict[experiment_k]['stabilization_flag'] = True
