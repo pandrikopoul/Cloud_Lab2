@@ -114,7 +114,7 @@ def consume(topic: str):
                 print("----------------------------Sensor counter--------------------------")
                 print(experiment_dict[experiment_k]['sensor_counter'])
                 rint("----------------------------Sensors len--------------------------")
-                print(len(experiment_dict[experiment_k]['sensors'])
+                print(len(experiment_dict[experiment_k]['sensors']))
                 if experiment_dict[experiment_k]['sensor_counter'] == len(experiment_dict[experiment_k]['sensors']):
                     experiment_dict[experiment_k]['avg_temp'] = experiment_dict[experiment_k]['avg_temp']/len(experiment_dict[experiment_k]['sensors'])
                     experiment_dict[experiment_k]['sensor_counter']=0
