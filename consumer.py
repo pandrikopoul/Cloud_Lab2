@@ -83,7 +83,9 @@ def consume(topic: str):
             
             
             #print(decoded_message)
-            
+            if msg.headers()[0][1]== b'experiment_terminated':# enas producer mporei na exei mono ena pirama ?
+                print("----------------------------------EXPERIMENT - TERMINATED --------------------------------------------------")
+                del experiment_dict[experiment_k]
             if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
                 experiment_k = str(decoded_message['experiment'])
                 print(decoded_message['experiment'])
@@ -206,9 +208,7 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
-            if msg.headers()[0][1]== b'experiment_terminated':
-                print("----------------------------------EXPERIMENT - TERMINATED --------------------------------------------------")
-                del experiment_dict[experiment_k]
+            
     #experiment_k=experiment_k+1
 
 
