@@ -22,7 +22,7 @@ topic="$1"
 
 
 
-for i in {1..1}; do
+for i in {1..3}; do
     docker run \
         --rm \
         -v $(pwd)/auth:/usr/src/cc-assignment-2023/experiment-producer/auth \
