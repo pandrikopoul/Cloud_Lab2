@@ -11,7 +11,8 @@ import time
 #from generated_code import notification_pb2
 #from generated_code import notification_pb2_grpc
 server_address = 'localhost:50051'  # Replace with the actual server address and port
-
+experiment_dict={}
+#experiment_k= None
 
 
 # gia na steilw thn thermokrasia sthn vash epidi ena pirama exei polous sensores egw prepei na steilw to average apo olous tous sensores tou piramatos
@@ -57,8 +58,8 @@ c = Consumer({
 @click.command()
 @click.argument('topic')
 def consume(topic: str):
-    experiment_dict = {}
-    experiment_k=1
+    global experiment_dict
+    experiment_k= None
    
     c.subscribe([topic], on_assign=lambda _, p_list: print(p_list))
     
@@ -76,7 +77,7 @@ def consume(topic: str):
         #try:
 
         reader = fastavro.reader(io.BytesIO(avro_message))
-        print(list(reader))
+       
         for decoded_message in reader:
             #print("Another message ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             
@@ -84,7 +85,7 @@ def consume(topic: str):
             #print(decoded_message)
             
             if msg.headers()[0][1] == b'experiment_configured': # store the values related to the configuration of the experiment in to a dictionary
-                
+                experiment_k = str(decoded_message['experiment'])
                 print(decoded_message['experiment'])
                 print(decoded_message['researcher'])
                 print(decoded_message['sensors'])
@@ -205,10 +206,10 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
-    if msg.headers()[0][1]== b'experiment_terminated':
-        print("----------------------------------EXPERIMENT - TERMINATED --------------------------------------------------")
-        del experiment_dict[experiment_k]
-    experiment_k=experiment_k+1
+            if msg.headers()[0][1]== b'experiment_terminated':
+                print("----------------------------------EXPERIMENT - TERMINATED --------------------------------------------------")
+                del experiment_dict[experiment_k]
+    #experiment_k=experiment_k+1
 
 
 if __name__ == "__main__":
