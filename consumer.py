@@ -204,6 +204,9 @@ def consume(topic: str):
             #print(decoded_message)
        # except Exception as e:
        #     print(f"Error decoding Avro message: {e}")
+    if msg.headers[0][1]==b'experiment_terminated':
+        print("----------------------------------EXPERIMENT - TERMINATED --------------------------------------------------")
+        del experiment_dict[experiment_k]
     experiment_k=experiment_k+1
 
 
