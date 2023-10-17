@@ -12,8 +12,8 @@ RUN pip install grpcio
 
 WORKDIR /usr/src/app
 
-COPY consumer.py .
+COPY consumer_2.py .
 
 VOLUME ["/usr/src/app/auth"]
 
-ENTRYPOINT ["python3", "consumer.py" ]
+ENTRYPOINT ["python3", "consumer_2.py" ]
