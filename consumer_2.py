@@ -43,7 +43,7 @@ def signal_handler(_sig, _frame):
 signal.signal(signal.SIGTERM, signal_handler)
 
 
-def consume(topic: str = "client4"):
+def consume(topic: str = "client3"):
     experiment_dict = {}
 
     c.subscribe([topic], on_assign=lambda _, p_list: logging.debug(p_list))
